@@ -1,0 +1,530 @@
+\documentclass[12pt,a4paper]{report}
+
+% ================== PAGE SETUP ==================
+\usepackage[a4paper,left=1.25in,right=1in,top=1in,bottom=1in]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{3em} % helps avoid overfull hbox warnings
+
+% ================== PACKAGES ==================
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftchapdotsep}}
+\renewcommand{\cftchapdotsep}{\cftdotsep}
+
+% Allow image filenames with spaces/dots safely
+\usepackage{grffile}
+
+% Make links (keep this near the end, but before \begin{document} is fine)
+\usepackage[hidelinks]{hyperref}
+
+% Optional: set where images are searched (put your images in same folder)
+\graphicspath{{./}}
+
+% ================== CHAPTER/SECTION FORMAT ==================
+\titleformat{\chapter}{\bfseries\Large}{CHAPTER \thechapter:}{1em}{}
+\titleformat{\section}{\bfseries}{\thesection}{1em}{}
+
+% ================== DOCUMENT ==================
+\begin{document}
+
+% ================== TITLE PAGE ==================
+\begin{titlepage}
+\begin{center}
+
+\textbf{KANTIPUR ENGINEERING COLLEGE}\\
+(Affiliated to Tribhuvan University)\\
+Dhapakhel, Lalitpur\\[1.5cm]
+
+\vfill
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=50mm,height=50mm]{logo.png}
+\end{figure}
+
+\textbf{[Subject Code: EX 654]}\\[1cm]
+
+\textbf{A MINOR PROJECT PROGRESS REPORT ON}\\[0.5cm]
+\textbf{``CABLE FAULT DETECTION SYSTEM USING TIME DOMAIN REFLECTOMETRY''}\\[2cm]
+
+\textbf{Submitted by:}\\[0.5cm]
+\begin{tabular}{p{5.8cm} r}
+Aabiskar Subedi          & [001/BEI/079] \\
+Chofung Jabegu Limbu    & [007/BEI/079] \\
+Prasun Khatiwada        & [014/BEI/079] \\
+\end{tabular}\\[2cm]
+
+\textbf{Submitted to:}\\
+Department of Computer and Electronics Engineering\\[1cm]
+
+February, 2026
+
+\end{center}
+\end{titlepage}
+
+% ================== ABSTRACT ==================
+\clearpage
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\chapter*{ABSTRACT}
+\addcontentsline{toc}{chapter}{Abstract}
+
+Underground cable fault detection is a critical task in power and communication
+systems due to the difficulty of accessing buried cables. Traditional fault
+detection methods are time-consuming, costly, and often require extensive
+manual inspection. This project presents a low-cost cable fault detection system
+based on the principle of Time Domain Reflectometry (TDR).
+
+In the proposed system, a short-duration electrical pulse generated using an
+NE555 timer is injected into the cable. Reflections caused by impedance
+discontinuities are analyzed to determine the location of faults. Signal
+conditioning is performed using a Schmitt trigger and an LM358 operational
+amplifier. A NodeMCU microcontroller processes the reflected signal and displays
+the fault distance on an OLED display. The system is suitable for cable lengths
+up to 100 meters and is ideal for academic and small-scale industrial
+applications.
+
+% ================== ACKNOWLEDGEMENT ==================
+\clearpage
+\chapter*{ACKNOWLEDGEMENT}
+\addcontentsline{toc}{chapter}{Acknowledgement}
+
+First and foremost, we would like to express our sincere gratitude to the
+Department of Computer and Electronics Engineering, Kantipur Engineering
+College, for providing us with the opportunity to carry out this minor project.
+
+We are extremely thankful to our supervisor Er. Sujin Gwachha for his valuable
+guidance, encouragement, and continuous support throughout the project.
+
+We also thank our classmates and faculty members for their constructive
+suggestions and cooperation during the project work.
+
+% ================== CONTENTS ==================
+\clearpage
+\tableofcontents
+
+\clearpage
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+
+\clearpage
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+
+% ================== ABBREVIATION ==================
+\clearpage
+\chapter*{ABBREVIATION}
+\addcontentsline{toc}{chapter}{Abbreviation}
+
+\begin{tabular}{ll}
+TDR & Time Domain Reflectometry\\
+NodeMCU & Node Micro Controller Unit\\
+IoT & Internet of Things\\
+OLED & Organic Light Emitting Diode\\
+IDE & Integrated Development Environment\\
+GPIO & General Purpose Input Output\\
+BNC & Bayonet Neill--Concelman\\
+TEM & Transverse Electromagnetic\\
+\end{tabular}
+
+% ================== CHAPTER 1 ==================
+\clearpage
+\pagenumbering{arabic}
+\chapter{INTRODUCTION}
+
+\section{Background}
+Cables are widely used in modern power distribution and communication networks due to their improved safety, reduced exposure to environmental conditions, and minimal impact on surrounding infrastructure. However, locating faults in cable systems remains a major challenge, as physical inspection along the entire length is often impractical. Faults such as insulation degradation, conductor damage, or moisture penetration can lead to service interruptions, safety concerns, and increased maintenance expenses.  
+Conventional fault detection techniques typically involve manual inspection, excavation, or the use of bulky and expensive testing equipment. These approaches are time-consuming, labor-intensive, and inefficient, particularly for long cable runs. To overcome these limitations, Time Domain Reflectometry (TDR) provides an effective solution. TDR operates by transmitting a short-duration electrical pulse through the cable and analyzing the reflected signals caused by impedance discontinuities. The location of the fault is determined by measuring the time delay between the transmitted and reflected pulses.  
+In the proposed system, a NE555 timer is used to generate a short-duration pulse suitable for TDR-based measurements. The reflected signal is conditioned and compared using an LM358 operational amplifier, enabling clear detection of fault-related reflections. This approach allows local monitoring of cable conditions, reduces the need for manual intervention, and significantly shortens the time required to identify and address faults.  
+The objective of this project is to develop a cost-effective and efficient cable fault detection system based on the TDR principle, designed to be simple, reliable, and practical for medium-range applications of up to 100 meters. The system ensures faster fault identification, reduced downtime, and improved reliability of cable networks.
+
+\section{Problem Statement}
+Detecting faults in cables is challenging due to their hidden nature, making traditional inspection methods slow, costly, and inefficient. In Nepal, manual detection leads to delays, service disruption, and unnecessary digging. There is a need for a lowcost, accurate solution. This project aims to develop a TDR  based system for real-time cable fault detection to ensure faster maintenance and improved reliability
+
+\section{Objective}
+To design and implement a low-cost and reliable underground cable fault
+detection system using Time Domain Reflectometry.
+
+\section{Features}
+\begin{itemize}[leftmargin=1.5em]
+\item Detects and locates faults in underground cables using Time Domain    Reflectometry (TDR).
+.
+\item Real-time transmission of fault data
+\item Generates and sends pulse signals through the cable using a 555 timer circuit
+\item Displays fault distance and demonstrate with home instrument
+\end{itemize}
+
+\section{Feasibility}
+The feasibility of the underground cable fault detection system was evaluated through technical and economic aspects as follows
+
+\subsection{Technical Feasibility}
+The feasibility of the underground cable fault detection system was evaluated through technical and economic aspects as follows
+The system uses commonly available electronic components such as the 555 timer IC and LM358 operational amplifier. These components operate at low voltage levels, thereby minimizing electrical hazards during operation
+\subsection{Economic Feasibility}
+The project uses affordable and widely available modules, making it costeffective. The estimated total cost of the prototype, including sensors, microcontroller, and communication modules, is approximately Rs. 5000, which is within the typical budget.
+
+% ================== CHAPTER 2 ==================
+\clearpage
+\chapter{LITERATURE REVIEW}
+
+\section{Related Works}
+Cable fault detection is crucial in maintaining reliable electrical distribution
+systems. Traditional fault detection techniques often require manual inspection,
+which is time-consuming and inefficient. To overcome these limitations, recent
+research has focused on advanced techniques such as Time Domain Reflectometry
+(TDR) and signal-based analysis methods to improve detection accuracy and
+automation.
+
+Gustavsen \textit{et al.} (2010) explored high-frequency modeling of power cables
+and established the effectiveness of TDR for locating faults. Their work
+demonstrated how impedance mismatches within cables generate signal reflections,
+allowing accurate fault detection through waveform analysis.
+
+Simoes \textit{et al.} (2004) emphasized the importance of intelligent monitoring
+techniques in power electronics and distribution systems. Their study highlighted
+real-time signal processing, embedded control, and automation as essential
+elements for modern diagnostic systems.
+
+Patel and Shah (2021) proposed a pulse-reflection-based fault detection model
+using embedded processing techniques. Their system analyzes reflected signals
+and displays fault locations locally using measurement instruments. The low-cost
+design shows strong potential for scalable implementation.
+
+Sharma \textit{et al.} (2022) developed an advanced cable fault detection system
+integrating TDR with signal classification techniques. Their approach improves
+fault detection accuracy, reduces response time, and supports automated
+diagnostic infrastructure.
+
+Overall, the integration of TDR and embedded signal processing enables accurate
+fault diagnostics, early fault identification, and reduced system downtime.
+
+\section{Related Theory}
+
+Underground cable fault detection using Time Domain Reflectometry (TDR) is
+fundamentally based on the principle of electromagnetic (EM) pulse propagation
+through transmission lines and the analysis of reflected signals caused by
+impedance variations. The key theoretical elements underlying this process
+include electromagnetic wave behavior, impedance discontinuities, and reflection
+patterns.
+
+\subsection{Electromagnetic Pulse Propagation}
+When a high-frequency voltage pulse is injected into a cable, it propagates as a
+transverse electromagnetic (TEM) wave along the conductor. The propagation
+velocity of this wave depends on the dielectric properties of the cable
+insulation. Any damage, moisture intrusion, or insulation degradation alters
+these properties, affecting signal propagation. As a result, a portion of the
+signal is reflected at the fault location, indicating both the presence and
+nature of the fault.
+
+\subsection{Impedance Sensing and Fault Location}
+The location of a fault is determined by measuring the time interval between the
+transmitted pulse and the reflected signal. This round-trip travel time, combined
+with the known propagation velocity of the cable, enables accurate calculation of
+the distance to the fault. Precise timing measurements and accurate knowledge of
+cable material characteristics are essential for reliable fault localization.
+
+Shankar Ramharack and Sanjay Bahadoorsingh (2023) reviewed underground cable fault
+detection techniques using TDR and frequency-domain methods. Their study
+demonstrated the application of step-pulse TDR combined with wavelet transforms
+and matched filters for accurate fault localization without requiring detailed
+cable parameters, making the approach suitable for complex or undocumented cablenetworks.
+
+Dr. Klaus Giese (2016) discussed the degradation of electromagnetic pulses in
+underground cables due to resistive and dielectric losses. As the pulse
+propagates, its amplitude decreases due to attenuation and its waveform spreads
+due to dispersion, which complicates the interpretation of reflected signals
+during fault analysis.
+
+Dr. Barry M. Novac (2011) emphasized that the characteristic impedance of a
+transmission line is a critical parameter in TDR-based systems. Uniform impedance ensures stable wave propagation, while faults or material inconsistencies cause impedance mismatches that generate reflected signals. 
+
+% ================== CHAPTER 3 ==================
+\clearpage
+\chapter{SYSTEM REQUIREMENTS}
+
+\section{Hardware Requirements}
+
+\subsection{NodeMCU (ESP8266)}
+NodeMCU is a Wi-Fi enabled microcontroller suitable for fault detection systems.
+It processes conditioned reflection signals, calculates fault distance, displays
+results on an OLED screen, and transmits real-time data to a cloud dashboard
+using MQTT or HTTP protocols. Its compact size and built-in connectivity enable
+efficient remote diagnostics and reduced maintenance time.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\textwidth]{nodemcu.png}
+\caption{NodeMCU (ESP8266)}
+\label{fig:nodemcu}
+\end{figure}
+
+\subsection{NE555 Timer IC}
+The NE555 timer is used to generate sharp and controlled test pulses essential
+for TDR-based fault detection. Configured in monostable mode, it injects voltage
+pulses into the cable. Reflected pulses from impedance discontinuities enable
+fault distance calculation. Its simplicity and low cost make it ideal for pulse
+generation applications.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{NE555.png}
+\caption{NE555 Timer IC}
+\label{fig:ne555}
+\end{figure}
+
+\subsection{LM358 Operational Amplifier}
+The LM358 is a dual operational amplifier used to amplify weak reflected signals
+from cable faults. It conditions low-amplitude analog signals to levels suitable
+for microcontroller processing. Its low power consumption and single-supply
+operation make it ideal for portable field systems.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{lm358.png}
+\caption{LM358 Operational Amplifier}
+\label{fig:lm358}
+\end{figure}
+
+\subsection{1N4148 Switching Diode}
+The 1N4148 is a fast-switching diode used for circuit protection and signal
+shaping. It protects sensitive components from voltage spikes during pulse
+injection and reflection. Its nanosecond recovery time preserves signal timing
+integrity.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{switching_diode.png}
+\caption{1N4148 Switching Diode}
+\label{fig:diode}
+\end{figure}
+
+\subsection{I\textsuperscript{2}C OLED Display}
+The I\textsuperscript{2}C OLED display is used to display fault distance and type.
+It requires only two data lines (SDA and SCL), conserving GPIO pins. The display
+is compact, reliable, and suitable for real-time monitoring applications.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{I2C OLED Display.png}
+\caption{I\textsuperscript{2}C OLED Display}
+\label{fig:oled}
+\end{figure}
+
+\subsection{BNC Connector}
+A BNC connector provides a secure and stable connection for coaxial cables used
+in high-frequency signal transmission. In TDR systems, it ensures minimal signal
+loss and reliable pulse injection.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{bnc.png}
+\caption{BNC Connector}
+\label{fig:bnc}
+\end{figure}
+
+\subsection{Schmitt Trigger}
+The Schmitt trigger improves reflected signal detection by converting noisy and
+slowly varying pulses into clean digital transitions. It introduces hysteresis,
+preventing false triggering and ensuring accurate timing measurement.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{Schmitt trigger.png}
+\caption{Schmitt Trigger}
+\label{fig:schmitt}
+\end{figure}
+
+\subsection{Power Supply Adapter}
+A regulated 5V, 3A power supply provides stable power to all system components.
+It protects the circuit from voltage fluctuations and ensures reliable operation.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{power_supply.png}
+\caption{Power Supply Adapter}
+\label{fig:power}
+\end{figure}
+
+\subsection{Coaxial Cable}
+A 75 ohm coaxial cable is used to transmit high-frequency signals between the circuit and the measurement device. 
+It consists of a central conductor, dielectric insulation, metallic shielding, and an outer protective jacket. 
+The shielding minimizes external noise and signal loss, making it suitable for accurate signal transmission in TDR and oscilloscope observations.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{coax.png}
+\caption{75 ohm Coaxial Cable}
+\label{fig:cable}
+\end{figure}
+
+\clearpage
+
+\section{Software Requirements}
+
+\subsection{Arduino IDE}
+The Arduino Integrated Development Environment (IDE) is a cross-platform software used to write, compile, and upload programs to microcontrollers such as the NodeMCU. It provides a simple interface with features like syntax highlighting, auto-completion, and serial monitoring that support efficient embedded system development. In this project, the IDE is used to program the NodeMCU for processing reflected signals from the TDR system, calculating cable fault distance, and controlling the OLED display. It also supports libraries such as ESP8266WiFi for connectivity and I2C for communication. The built-in compiler and uploader simplify debugging, testing, and deployment of real-time fault detection code.
+
+\subsection{Proteus}
+Proteus is a professional simulation software used for virtual prototyping of electronic circuits before hardware implementation. It combines schematic capture, SPICE-based simulation, and microcontroller co-simulation to model system behavior accurately. In this project, Proteus is used to simulate the TDR cable fault detection circuit including the NE555 timer, LM358 amplifier, and NodeMCU. It helps verify pulse generation, signal reflection behavior, and fault detection logic without physical components. Waveform analysis tools assist in detecting noise, timing issues, and design errors early. This reduces hardware risk, lowers prototyping costs, and improves system reliability for underground cable monitoring applications.
+
+% ================== CHAPTER 4 ==================
+\clearpage
+\chapter{METHODOLOGY}
+
+\section{Block Diagram}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{block_diagram.png}
+    \caption{Block Diagram of the Proposed TDR System}
+    \label{fig:block_diagram}
+\end{figure}
+
+\section{System Development}
+The pulse generation subsystem forms the core of the proposed Time Domain Reflectometry (TDR) system. An NE555 timer IC is configured in \textbf{monostable mode} to generate short-duration electrical pulses in the microsecond range, which are practical and stable for laboratory-scale TDR applications.  
+
+The pulse width is controlled using a resistor–capacitor network consisting of a 470~$\Omega$ resistor (R1) and a 100~pF capacitor (C1), producing a narrow and repeatable test pulse. This pulse serves as the excitation signal that is injected into the RG-58 coaxial cable under test through a properly terminated BNC connector.  
+
+To improve signal quality, the generated pulse is passed through a 74HC14 Schmitt trigger, which reshapes the waveform by removing noise and slow signal transitions. This ensures sharp rising and falling edges before the pulse enters the cable, thereby enhancing reflection clarity and measurement accuracy.  
+
+When the injected pulse encounters an impedance discontinuity caused by a fault, a portion of the signal is reflected back toward the source. The fault detection mechanism identifies two primary fault conditions:
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Open-circuit faults}: High impedance faults generating positive reflections.
+    \item \textbf{Short-circuit faults}: Low impedance faults generating negative reflections.
+\end{itemize}
+
+The reflected signals are typically weak and susceptible to noise, requiring proper signal conditioning before analysis. The signal processing unit employs an LM358 operational amplifier configured with a voltage gain of approximately 11, achieved using a 1~k$\Omega$ resistor (R2) and a 10~k$\Omega$ resistor (R3). This stage amplifies the reflected pulse while suppressing noise and minimizing the influence of the initial transmitted pulse.  
+
+The conditioned signal is then observed using standard measurement instruments such as an oscilloscope, allowing accurate determination of the time delay between the transmitted and reflected pulses.  
+
+\section{Fault Distance Calculation}
+The fault distance is calculated using the standard TDR equation:
+\begin{equation}
+\text{Distance} = \frac{\text{Time Delay} \times \text{Propagation Velocity}}{2}
+\end{equation}
+
+where the propagation velocity of the RG-58 coaxial cable is approximately $2 \times 10^8$~m/s. This method enables reliable fault localization with an accuracy suitable for short- to medium-length cable testing.  
+
+The overall system provides a simple, cost-effective, and reliable approach for cable fault detection without the need for wireless communication or IoT-based processing.
+
+\clearpage
+\section{Flowchart}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{flowchart.png}
+    \caption{Flowchart of the TDR Measurement Process}
+    \label{fig:flowchart}
+\end{figure}
+
+% ================== CHAPTER 5 ==================
+\clearpage
+\chapter{EPILOGUE}
+
+\section{Work Completed}
+\begin{itemize}[leftmargin=1.5em]
+\item A detailed study of Time Domain Reflectometry (TDR) principles and cable fault characteristics was carried out to understand system requirements and operating concepts.
+\item The required electronic components, including the NE555 timer IC, LM358 operational amplifier, fast-switching diode (1N4148), passive components, and connecting interfaces, were identified and collected based on system design requirements.
+\item A pulse generation circuit using the NE555 timer IC configured in monostable mode was designed to produce short-duration pulses suitable for TDR operation.
+\item Signal conditioning and reflection detection circuitry using the LM358 operational amplifier was designed to amplify and observe reflected pulses corresponding to impedance discontinuities in the cable.
+\item The TDR system is currently in the initial design and modeling phase using Proteus Design Suite, focusing on schematic development and configuration of core components for pulse generation and signal observation.
+\end{itemize}
+
+\section{Project Plan}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{gantt.png}
+\caption{Gantt Chart for Project Plan}
+\label{fig:gantt}
+\end{figure}
+
+\section{Cost Estimation}
+\begin{table}[H]
+\centering
+\caption{Cost Estimation Table}
+\label{tab:cost}
+\begin{tabular}{|c|l|c|c|}
+\hline
+Serial No. & Item & Quantity & Price (NPR) \\ \hline
+1 & NodeMCU & 1 & 800 \\ \hline
+2 & 555 timer & 1 & 240 \\ \hline
+3 & I2c display & 1 & 700 \\ \hline
+4 & 74Hc14 (schmitt trigger) & 1 & 60 \\ \hline
+5 & Op amp (lm358) & 1 & 130 \\ \hline
+6 & BNC Connector & 4 & 50 \\ \hline
+7 & Coaxial Cable & 1 & 700 \\ \hline
+8 & others & - & 1500 \\ \hline
+\multicolumn{3}{|r|}{Total} & 4180 \\ \hline
+\end{tabular}
+\end{table}
+
+\clearpage
+\section{Applications}
+\begin{itemize}[leftmargin=1.5em]
+\item Real-time Fault Monitoring: Continuously monitors cables.
+\item Accurate Fault Localization: Uses TDR to pinpoint the exact location of faults like short circuits or open circuits.
+\item Reduced Downtime: Enables quicker fault detection and repair, minimizing power outage durations.
+\end{itemize}
+
+% ================== REFERENCES ==================
+\clearpage
+\chapter*{REFERENCES}
+\addcontentsline{toc}{chapter}{References}
+
+\begin{enumerate}
+    \item B. Gustavsen et al., "High-frequency modeling of underground power cables and the use of TDR for fault location," \textit{IEEE Transactions on Power Delivery}, vol. 25, no. 3, pp. 1153--1161, Jul. 2010.
+    
+    \item R. Patel and M. Shah, "IoT-Based Underground Cable Fault Detection Using NodeMCU," \textit{International Journal of Research in Engineering, Science and Management (IJRESM)}, vol. 4, no. 6, pp. 45--48, Jun. 2021.
+    
+    \item Sharma et al., "Advanced Underground Cable Fault Detection Using TDR and Machine Learning," \textit{IEEE Sensors Letters}, vol. 6, no. 5, pp. 1--4, May 2022.
+    
+    \item Ramharack and S. Bahadoorsingh, "Wavelet Transform Techniques for Step-Pulse TDR in Cable Fault Detection," \textit{Electric Power Systems Research}, vol. 215, 2023, Art. no. 108986.
+    
+    \item K. Giese, "Signal Attenuation and Dispersion in Underground TDR Systems," \textit{IEEE Transactions on Instrumentation and Measurement}, vol. 65, no. 12, pp. 2811--2818, Dec. 2016.
+    
+    \item M. G. Simões and F. A. Farret, \textit{Integration of Intelligent Systems in Power Electronics and Smart Grids}, New York, NY, USA: Springer, 2004.
+\end{enumerate}
+
+\clearpage
+\appendix
+\section{Oscilloscope Waveforms for TDR Measurement}
+
+This appendix presents the oscilloscope waveforms observed during the Time Domain Reflectometry (TDR) experiment using an RG-6 coaxial cable. The incident input pulse and the corresponding reflected signal were used to calculate the cable distance.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}[b]{0.9\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{1.png.jpeg}
+        \caption{Input pulse waveform applied to the RG-6 coaxial cable}
+        \label{fig:input_waveform}
+    \end{subfigure}
+
+    \vspace{0.4cm}
+
+    \begin{subfigure}[b]{0.9\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{2.png}
+        \caption{Reflected waveform observed during TDR measurement}
+        \label{fig:reflected_waveform}
+    \end{subfigure}
+
+    \caption{Incident and reflected waveforms observed on the oscilloscope during the TDR experiment}
+    \label{fig:tdr_waveforms}
+\end{figure}
+
+The time difference between the rising edge of the input pulse and the reflected signal corresponds to the round-trip propagation delay of the signal in the cable.
+
+\end{document}
